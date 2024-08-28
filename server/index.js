@@ -5,7 +5,16 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors({ origin: ['https://umbra-digital-tic-tac-toe.vercel.app', 'http://localhost:3000'] }));
+// Allow requests from any origin with specific methods and credentials
+const corsOptions = {
+  origin: '*', // Allow any origin
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Specify allowed methods
+  credentials: true, // Allow cookies and other credentials
+};
+
+app.use(cors(corsOptions));
+
+
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(req.path, req.method);
