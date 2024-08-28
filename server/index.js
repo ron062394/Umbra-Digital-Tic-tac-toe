@@ -24,17 +24,17 @@ app.get('/', (req, res) => {
   res.json('Hello, welcome to the backend!');
 });
 
-// Connect to MongoDB before setting up routes
+app.use('/api', require('./src/routes/gameRoutes'));
+
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000 // Increased timeout to 30 seconds
+    serverSelectionTimeoutMS: 5000 // 5 second timeout
   })
   .then(() => {
     console.log('Connected to MongoDB');
-    // Set up routes after successful connection
-    app.use('/api', require('./src/routes/gameRoutes'));
   })
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error.message);
@@ -46,10 +46,5 @@ const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-// Increase the timeout for the server
-server.timeout = 120000; // 120 seconds
-
-// Add error handling for the server
-server.on('error', (error) => {
-  console.error('Server error:', error);
-});
+// Add a timeout to the server
+server.timeout = 60000; // 60 seconds
