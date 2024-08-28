@@ -9,7 +9,9 @@ const app = express();
 // Middleware
 // CORS for querying different domains
 app.use(cors({ origin: ['https://umbra-digital-tic-tac-toe.vercel.app', 'http://localhost:3000', 'https://www.postman.com'] }));
+
 app.use(express.json());
+
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   if (req.body) {
@@ -25,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 import gameController from './src/controllers/gameController';
-router.get('/games', gameController.getAllGames);
+app.get('/games', gameController.getAllGames);
 
 app.use('/api', require('./src/routes/gameRoutes'));
 
