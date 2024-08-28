@@ -24,7 +24,12 @@ app.get('/', (req, res) => {
   res.json('Hello, welcome to the backend!');
 });
 
-app.use('/api', require('./src/routes/gameRoutes'));
+// Log the routes being registered
+console.log('Registering routes from:', require.resolve('./src/routes/gameRoutes'));
+const gameRoutes = require('./src/routes/gameRoutes');
+console.log('Registered routes:', Object.keys(gameRoutes));
+
+app.use('/api', gameRoutes);
 
 // Connect to MongoDB
 mongoose
@@ -44,6 +49,18 @@ mongoose
 const port = process.env.PORT || 3001;
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log('Registered routes:');
+  app._router.stack.forEach((r) => {
+    if (r.route && r.route.path) {
+      console.log(`${Object.keys(r.route.methods)} ${r.route.path}`);
+    } else if (r.name === 'router') {
+      r.handle.stack.forEach((nestedRoute) => {
+        if (nestedRoute.route) {
+          console.log(`${Object.keys(nestedRoute.route.methods)} /api${nestedRoute.route.path}`);
+        }
+      });
+    }
+  });
 });
 
 // Add a timeout to the server
