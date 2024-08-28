@@ -14,7 +14,7 @@ const HomePage = () => {
     const fetchGames = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3001/api/games', {
+        const response = await axios.get('https://umbra-digital-tic-tac-toe-backend.onrender.com/api/games', {
           timeout: 10000, // 10 seconds timeout
           headers: {
             'Content-Type': 'application/json',
