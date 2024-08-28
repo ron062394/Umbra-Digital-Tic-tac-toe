@@ -24,6 +24,9 @@ app.get('/', (req, res) => {
   res.json('Hello, welcome to the backend!');
 });
 
+import gameController from './src/controllers/gameController';
+router.get('/games', gameController.getAllGames);
+
 app.use('/api', require('./src/routes/gameRoutes'));
 
 // Connect to MongoDB
