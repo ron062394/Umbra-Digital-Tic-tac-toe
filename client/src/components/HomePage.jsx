@@ -14,7 +14,7 @@ const HomePage = () => {
     const fetchGames = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3001/api/games', {
+        const response = await axios.get('umbra-digital-tic-tac-toe-y166.vercel.app/api/games', {
           timeout: 10000, // 10 seconds timeout
           headers: {
             'Content-Type': 'application/json',

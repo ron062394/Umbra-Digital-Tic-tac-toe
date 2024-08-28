@@ -9,6 +9,15 @@ const app = express();
 // Middleware
 // CORS for querying different domains
 app.use(cors({ origin: ['https://umbra-digital-tic-tac-toe.vercel.app/', 'http://localhost:3000'] }));
+app.use(express.json());
+app.use((req, res, next)=> {
+  console.log(req.path, req.method);
+  if (req.body) {
+    console.log('Request body:');
+    console.log(req.body);
+  }  
+  next();
+})
 
 
 app.use(express.json());
