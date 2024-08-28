@@ -21,7 +21,13 @@ const HomePage = () => {
             'Access-Control-Allow-Origin': '*',
           },
         });
-        setGames(response.data);
+        if (Array.isArray(response.data)) {
+          setGames(response.data);
+        } else {
+          console.error('Unexpected response format:', response.data);
+          setError('Unexpected data format received from server.');
+          setGames([]);
+        }
         setError(null);
       } catch (error) {
         console.error('Error fetching games:', error);
