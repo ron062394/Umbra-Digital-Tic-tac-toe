@@ -16,7 +16,7 @@ const Game = () => {
   useEffect(() => {
     const fetchGameData = async () => {
       try {
-        const response = await axios.get(`https://umbra-digital-tic-tac-toe-api.vercel.app/api/games/${id}`);
+        const response = await axios.get(`http://localhost:3001/api/games/${id}`);
         setGameData(response.data);
       } catch (error) {
         console.error('Error fetching game data:', error);
@@ -50,7 +50,7 @@ const Game = () => {
     else winnerString = 'draw';
 
     try {
-      const response = await axios.put(`https://umbra-digital-tic-tac-toe-api.vercel.app/api/games/${id}`, {
+      const response = await axios.put(`http://localhost:3001/api/games/${id}`, {
         winner: winnerString,
         board: [
           board.slice(0, 3),

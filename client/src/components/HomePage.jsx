@@ -14,20 +14,14 @@ const HomePage = () => {
     const fetchGames = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('umbra-digital-tic-tac-toe-y166.vercel.app/api/games', {
+        const response = await axios.get('http://localhost:3001/api/games', {
           timeout: 10000, // 10 seconds timeout
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
           },
         });
-        if (Array.isArray(response.data)) {
-          setGames(response.data);
-        } else {
-          console.error('Unexpected response format:', response.data);
-          setError('Unexpected data format received from server.');
-          setGames([]);
-        }
+        setGames(response.data);
         setError(null);
       } catch (error) {
         console.error('Error fetching games:', error);

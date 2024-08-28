@@ -11,7 +11,7 @@ const NewGameSession = () => {
 
   const handleStartGame = async () => {
     try {
-      const response = await axios.post('https://umbra-digital-tic-tac-toe-api.vercel.app/api/games', {
+      const response = await axios.post('http://localhost:3001/api/games', {
         player1,
         player2
       });
