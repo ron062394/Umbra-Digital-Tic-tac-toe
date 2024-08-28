@@ -11,7 +11,7 @@ const NewGameSession = () => {
 
   const handleStartGame = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/games', {
+      const response = await axios.post('https://umbra-digital-tic-tac-toe-backend.onrender.com/api/games', {
         player1,
         player2
       });

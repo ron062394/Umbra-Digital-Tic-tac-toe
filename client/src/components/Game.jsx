@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Confetti from 'react-confetti';
 
 const Game = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
@@ -10,13 +11,15 @@ const Game = () => {
   const [gameData, setGameData] = useState(null);
   const [winner, setWinner] = useState(null);
   const [roundEnded, setRoundEnded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGameData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/games/${id}`);
+        const response = await axios.get(`https://umbra-digital-tic-tac-toe-backend.onrender.com/api/games/${id}`);
         setGameData(response.data);
       } catch (error) {
         console.error('Error fetching game data:', error);
@@ -39,6 +42,10 @@ const Game = () => {
     if (roundWinner || boardCopy.every(square => square !== null)) {
       setWinner(roundWinner);
       setRoundEnded(true);
+      setShowModal(true);
+      if (roundWinner) {
+        setShowConfetti(true);
+      }
     }
   };
 
@@ -50,7 +57,7 @@ const Game = () => {
     else winnerString = 'draw';
 
     try {
-      const response = await axios.put(`http://localhost:3001/api/games/${id}`, {
+      const response = await axios.put(`https://umbra-digital-tic-tac-toe-backend.onrender.com/api/games/${id}`, {
         winner: winnerString,
         board: [
           board.slice(0, 3),
@@ -70,6 +77,8 @@ const Game = () => {
         setIsXNext(true);
         setWinner(null);
         setRoundEnded(false);
+        setShowModal(false);
+        setShowConfetti(false);
       } else if (action === 'stop') {
         navigate('/');
       }
@@ -92,7 +101,17 @@ const Game = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 relative">
+      {showConfetti && (
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            recycle={false}
+            numberOfPieces={200}
+          />
+        </div>
+      )}
       <div className="container mx-auto max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden">
         <h1 className="text-3xl font-bold text-center text-white py-6 bg-gradient-to-r from-purple-600 to-pink-600">Tic-Tac-Toe</h1>
         <div className="p-6">
@@ -105,9 +124,13 @@ const Game = () => {
           </div>
           <div className="text-center mb-6">
             {winner ? (
-              <h2 className="text-2xl font-bold text-gradient bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Winner: {winner}</h2>
+              <h2 className="text-2xl font-bold text-gradient bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Winner: {winner === 'X' ? `${gameData.player1} (X)` : `${gameData.player2} (O)`}
+              </h2>
             ) : (
-              <h2 className="text-2xl font-bold text-gradient bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Next Player: {isXNext ? 'X' : 'O'}</h2>
+              <h2 className="text-2xl font-bold text-gradient bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Next Player: {isXNext ? `${gameData.player1} (X)` : `${gameData.player2} (O)`}
+              </h2>
             )}
           </div>
           <div className="board flex flex-col items-center mb-6">
@@ -145,7 +168,29 @@ const Game = () => {
           )}
         </div>
       </div>
-     
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-xl">
+            <h2 className="text-3xl font-bold mb-4 text-gradient bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              {winner ? `Winner: ${winner === 'X' ? `${gameData.player1} (X)` : `${gameData.player2} (O)`}` : "It's a Draw!"}
+            </h2>
+            <div className="flex justify-center space-x-4">
+              <button 
+                onClick={() => updateGameData('continue')}
+                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full shadow-lg hover:from-purple-700 hover:to-pink-700 transition-colors duration-300 ease-in-out"
+              >
+                Play Again
+              </button>
+              <button 
+                onClick={() => updateGameData('stop')}
+                className="px-6 py-3 bg-gray-300 text-gray-700 font-bold rounded-full shadow-lg hover:bg-gray-400 transition-colors duration-300 ease-in-out"
+              >
+                End Game
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
