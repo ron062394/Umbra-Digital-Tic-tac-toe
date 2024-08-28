@@ -7,11 +7,8 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-// CORS for querying different domains
 app.use(cors({ origin: ['https://umbra-digital-tic-tac-toe.vercel.app', 'http://localhost:3000', 'https://www.postman.com'] }));
-
 app.use(express.json());
-
 app.use((req, res, next) => {
   console.log(req.path, req.method);
   if (req.body) {
@@ -20,15 +17,12 @@ app.use((req, res, next) => {
   }  
   next();
 });
-
-// Routes
 app.get('/', (req, res) => {
   res.json('Hello, welcome to the backend!');
 });
 
-import gameController from './src/controllers/gameController';
-app.get('/games', gameController.getAllGames);
 
+// Routes
 app.use('/api', require('./src/routes/gameRoutes'));
 
 // Connect to MongoDB
