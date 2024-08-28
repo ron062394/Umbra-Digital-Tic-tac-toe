@@ -1,0 +1,12 @@
+{
+    "routes": [
+      {
+        "src": "/api/games",
+        "methods": ["GET"],
+        "dest": "umbra-digital-api.vercel.app",
+        "headers": {
+          "Access-Control-Allow-Origin": "umbra-digital-api.vercel.app"
+        }
+      }
+    ]
+  }
